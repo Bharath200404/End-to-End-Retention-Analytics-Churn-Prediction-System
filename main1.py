@@ -28,11 +28,27 @@ input_dict['PaperlessBilling_Yes'] = paperless
 input_df = pd.DataFrame([input_dict])
 
 # Predict
-prob = model.predict_proba(input_df)[0][1]
+import requests
 
-st.write(f"Churn Probability: {prob:.2f}")
+if st.button("Predict"):
+    data = {
+        "tenure": tenure,
+        "MonthlyCharges": monthly_charges,
+        "SeniorCitizen": senior,
+        "PaperlessBilling": paperless
+    }
 
-if prob > 0.5:
-    st.error("⚠️ Customer is likely to churn")
-else:
-    st.success("✅ Customer will stay")
+    response = requests.post("http://127.0.0.1:5000/predict", json=data)
+
+    result = response.json()
+
+    prob = result["churn_probability"]
+
+    st.write(f"Churn Probability: {prob}")
+
+    if prob > 0.7:
+        st.error("⚠️ High Risk of Churn")
+    elif prob > 0.4:
+        st.warning("⚠️ Medium Risk")
+    else:
+        st.success("✅ Low Risk")
