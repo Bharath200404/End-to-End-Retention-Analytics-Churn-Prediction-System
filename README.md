@@ -62,7 +62,7 @@ The system includes:
 - Scikit-learn
 - XGBoost
 - Streamlit
-- Flask
+- Flast API
 - Requests
 
 ---
